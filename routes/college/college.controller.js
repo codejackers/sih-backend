@@ -4,6 +4,15 @@ const UniversityInfo = require("../../models/college.model");
 const getAllColleges = async (req, res) => {
   try {
     let city = req.query.city;
+    let collegename = req.query.collegename;
+
+    if (collegename)
+    {
+      const collegesname = await UniversityInfo.find({
+        Uname: collegename,
+      });
+      return res.status(200).json(collegesname);
+    }
 
     if (city) {
       city = capitalizeString(city);
@@ -34,6 +43,7 @@ const getCollege = async (req, res) => {
     });
   }
 };
+
 
 module.exports = {
   getAllColleges,
