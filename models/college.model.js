@@ -6,4 +6,6 @@ const collegeSchema = new mongoose.Schema({
   UCity: { type: String, required: true },
 });
 
+collegeSchema.index({ name: "nameSearch" });
+
 module.exports = mongoose.model("UniversityInfo", collegeSchema);

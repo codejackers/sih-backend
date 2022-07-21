@@ -1,6 +1,5 @@
 tasks remaining
 
-- search college by (name)
 - create + update + delete for college(id) and course(id)
 - login api
 - register api
@@ -11,3 +10,4 @@ tasks done
 - getCollegesList
 - getCollege(id)
 - getCollege?q=city
+- search college by name (http://localhost:3000/college/list?collegename=xyz)
