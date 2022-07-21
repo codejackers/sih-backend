@@ -1,6 +1,6 @@
 tasks remaining
 
-- getCourses(id)
+- search college by (name)
 - create + update + delete for college(id) and course(id)
 - login api
 - register api
