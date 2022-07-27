@@ -12,6 +12,7 @@ app.use(express.json());
 app.use(collegeRouter);
 app.use(courseRouter);
 
+
 app.get("/", (req, res) => {
   res.send("Hello World");
 });

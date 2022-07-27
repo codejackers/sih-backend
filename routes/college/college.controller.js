@@ -1,5 +1,6 @@
 const capitalizeString = require("capitalize-string");
 const UniversityInfo = require("../../models/college.model");
+const bcrypt = require("bcrypt");
 
 const getAllColleges = async (req, res) => {
   try {
@@ -44,8 +45,38 @@ const getCollege = async (req, res) => {
   }
 };
 
+const registerCollege = async(req , res) => {
+      try {
+        console.log(req.body);
+        const { UID , DOC , Uemail , Pass } = req.body;
+        // hashing the password
+        const salt = await bcrypt.genSalt(10); 
+        const hashpassword = await bcrypt.hash(Pass , salt);
+        
+        // verifying university 
+        // govt official email + Uemail send zoom link
+
+
+
+
+        // create new university
+        const newUni = new UniversityInfo({
+          UID: UID,
+          Doc: DOC,
+          Uemail: Uemail,
+          Pass: Pass
+        })
+
+        const Uni = await newUni.save()
+        return res.status(200).json(Uni);  
+        
+      } catch (error) {
+        console.log(error);
+      }
+}
 
 module.exports = {
   getAllColleges,
   getCollege,
+  registerCollege
 };

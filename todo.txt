@@ -6,7 +6,7 @@ hei login
 
 
 Registration
-UID , Uname , Ucity , Uemail , Password , DOC
+UID , Uname , Ucity , Uemail , Password , doc
 
 login
 UID and Password.
@@ -19,4 +19,4 @@ UID , password - different collection.
 
  
 govt official ko email me zoom meeting ke saat university ka verified_status bi
-http://localhost:3000/college/register
+
