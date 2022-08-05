@@ -7,12 +7,12 @@ const getAllColleges = async (req, res) => {
     let city = req.query.city;
     let collegename = req.query.collegename;
 
-    if (collegename) {
-      const collegeDetail = await UniversityInfo.find({
-        Uname: { $regex: collegename },
+    if (collegename)
+    {
+      const collegesname = await UniversityInfo.find({
+        Uname: collegename,
       });
-
-      return res.status(200).json(collegeDetail);
+      return res.status(200).json(collegesname);
     }
 
     if (city) {
@@ -22,10 +22,10 @@ const getAllColleges = async (req, res) => {
         UCity: city,
       });
       return res.status(200).json(colleges);
+    } else {
+      const colleges = await UniversityInfo.find({});
+      return res.status(200).json(colleges);
     }
-
-    const colleges = await UniversityInfo.find({});
-    return res.status(200).json(colleges);
   } catch (error) {
     return res.status(500).json({
       message: "Server error",
@@ -45,7 +45,6 @@ const getCollege = async (req, res) => {
   }
 };
 
-<<<<<<< HEAD
 const registerCollege = async(req , res) => {
       try {
         console.log(req.body);
@@ -59,7 +58,14 @@ const registerCollege = async(req , res) => {
 
 
 
+         // Check if this user already exisits
+         let user = await UniversityInfo.findOne({ Uemail: req.body.Uemail });
+         if (user) {
+          return res.status(400).send('That user already exisits!');
+         }
+         else {
 
+         
         // create new university
         const newUni = new UniversityInfo({
           UID: UID,
@@ -70,14 +76,14 @@ const registerCollege = async(req , res) => {
 
         const Uni = await newUni.save()
         return res.status(200).json(Uni);  
+         }
         
       } catch (error) {
         console.log(error);
       }
-}
+    
+    }    
 
-=======
->>>>>>> 8e3f8823a5124938e3514170479f48dcd19d8eab
 module.exports = {
   getAllColleges,
   getCollege,
