@@ -26,14 +26,9 @@ const collegeSchema = new mongoose.Schema({
     type: String,
     required: true 
   },
-  status: {
-    type: String, 
-    enum: ['Pending', 'Active'],
-    default: 'Pending'
-  },
-  confirmationCode: { 
-    type: String, 
-    unique: true }
+  verified: {
+    type: Boolean
+  }
 });
 
 collegeSchema.index({ name: "nameSearch" });
