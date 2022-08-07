@@ -1,22 +1,20 @@
-email
-
-
-
-hei login
-
-
+done 
 Registration
 UID , Uname , Ucity , Uemail , Password , doc
+email verification
+
 
 login
+hei login
 UID and Password.
 
-
-Registration - 
-
-UID , Uname , Ucity - universityinfos
-UID , password - different collection.
 
  
 govt official ko email me zoom meeting ke saat university ka verified_status bi
 
+
+College wala Register Form fill kia
+ --- College gets zoom links
+ --- Govt gets zoom + ( verify and reject ) links
+---- (if verify) => College gets verification success notification and can login in dashboard
+---- (if reject) => College gets verification reject notification
