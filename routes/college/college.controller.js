@@ -9,8 +9,9 @@ const getAllColleges = async (req, res) => {
 
     if (collegename)
     {
-      const collegesname = await UniversityInfo.find({
-        Uname: collegename,
+      const collegesname = await UniversityInfo.find(
+      {
+        Uname: { $regex: collegename },
       });
       return res.status(200).json(collegesname);
     }
