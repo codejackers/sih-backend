@@ -2,8 +2,11 @@ tasks remaining
 
 - create + update + delete for college(id) and course(id)
 - login api
+- (if verify) => College gets verification success notification and can login in dashboard
+- (if reject) => College gets verification reject notification
 - zoom ka link jana chiye hai login krne wala ko + govn official
 - Forget password
+- otp verification
 - Dashboard api
 
 tasks done
