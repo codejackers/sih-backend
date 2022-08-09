@@ -36,7 +36,7 @@ const getAllColleges = async (req, res) => {
       city = capitalizeString(city);
       // console.log(city);
       const colleges = await UniversityInfo.find({
-        UCity: city,
+        UCity: { $regex: city , '$options' : 'i'},
       });
       return res.status(200).json(colleges);
     }

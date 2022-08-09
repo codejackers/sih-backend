@@ -2,11 +2,19 @@ done
 Registration
 UID , Uname , Ucity , Uemail , Password , doc
 email verification
-
+College gets zoom links
+ --- Govt gets zoom + ( verify and reject ) links
+ 
+ 
 
 login
 hei login
 UID and Password.
+
+forgot password
+
+dashboard apis
+
 
 
  
@@ -14,7 +22,10 @@ govt official ko email me zoom meeting ke saat university ka verified_status bi
 
 
 College wala Register Form fill kia
- --- College gets zoom links
- --- Govt gets zoom + ( verify and reject ) links
 ---- (if verify) => College gets verification success notification and can login in dashboard
 ---- (if reject) => College gets verification reject notification
+
+
+
+agar zoom meet hogya aur govt official verify krna bhul gya + verification link expire..
+
