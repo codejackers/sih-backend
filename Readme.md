@@ -8,6 +8,7 @@ tasks remaining
 - Forget password
 - otp verification
 - Dashboard api
+- aws for doc
 
 tasks done
 
