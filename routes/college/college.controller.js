@@ -489,6 +489,59 @@ const loginCollege = async (req, res) => {
   }
 };
 
+
+const updatePassword =  async (req, res) => {
+  const { Uemail , Pass } = req.body;
+  let user = await UniversityInfo.findOne({ Uemail: Uemail });
+   if (!user)
+      return res.status(400).json({ message: "You are not registered" });
+   if (user && !user.verified)
+      return res.status(400).json({ message: "You are not verified yet" });
+
+    // hashing the password
+    const salt = await bcrypt.genSalt(10);
+    const hashpassword = await bcrypt.hash(Pass, salt);
+    console.log(Pass);
+    await UniversityInfo.findOneAndUpdate({ Uemail: Uemail }, { Pass: hashpassword })
+
+    return res.status(200).json({
+      message: "Your password has been updated , you can login now with new password",
+    });
+
+}
+const sendOtp =  async (req, res) => {
+  const { Uemail } = req.body;
+  let user = await UniversityInfo.findOne({ Uemail: Uemail });
+   if (!user)
+      return res.status(400).json({ message: "You are not registered" });
+   if (user && !user.verified)
+      return res.status(400).json({ message: "You are not verified yet" });
+
+   const OTP = uuidv4().slice(0, 6) 
+   const salt = await bcrypt.genSalt(10);
+   const hashOTP = await bcrypt.hash(OTP, salt);
+
+   const ResetPasswordOptions = {
+    from: "codejackers@outlook.com",
+    subject: "Reset Password OTP",
+    to: Uemail,
+    html: `
+    <p>Here is Your OTP : </p>
+    <strong>${OTP}</strong> 
+    `,
+  };
+            transporter
+            .sendMail(ResetPasswordOptions)
+            .then(() => {
+              res.status(200).json({
+                status: "OTP verify Pending",
+                message: "OTP sent in email",
+                hashedOTP: hashOTP
+              });
+            })
+           
+}
+
 module.exports = {
   getAllColleges,
   getCollege,
@@ -498,4 +551,6 @@ module.exports = {
   rejectCollege,
   loginCollege,
   rejected,
+  updatePassword,
+  sendOtp,
 };
