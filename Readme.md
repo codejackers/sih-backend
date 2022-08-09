@@ -2,11 +2,13 @@ tasks remaining
 
 - create + update + delete for college(id) and course(id)
 - login api
-- register api
 - zoom ka link jana chiye hai login krne wala ko + govn official
+- Forget password
 
 tasks done
 
+- Registration
+- zoom ka link jana chiye hai register krne wala ko + govn official
 - getCollegesList
 - getCollege(id)
 - getCollege?q=city
