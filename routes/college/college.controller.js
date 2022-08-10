@@ -33,7 +33,7 @@ const getAllColleges = async (req, res) => {
       city = capitalizeString(city);
       // console.log(city);
       const colleges = await UniversityInfo.find({
-        UCity: { $regex: city , '$options' : 'i'},
+        UCity: { $regex: city, $options: "i" },
       });
       return res.status(200).json(colleges);
     }
@@ -421,9 +421,9 @@ const registerCollege = async (req, res) => {
   let user = await UniversityInfo.findOne({ Uemail: req.body.Uemail });
 
   if (user && !user.verified)
-    return res.status(400).send("You are not verified yet! ");
+    return res.status(200).send("You are not verified yet! ");
   if (user) {
-    return res.status(400).send("That user already exisits!");
+    return res.status(200).send("That user already exisits!");
   } else {
     // create new university
     const newUni = new UniversityInfo({
@@ -460,9 +460,9 @@ const loginCollege = async (req, res) => {
     console.log(user.Pass);
 
     if (!user)
-      return res.status(400).json({ message: "You are not registered" });
+      return res.status(200).json({ message: "You are not registered" });
     if (user && !user.verified)
-      return res.status(400).json({ message: "You are not verified yet" });
+      return res.status(200).json({ message: "You are not verified yet" });
 
     await bcrypt
       .compare(Pass, user.Pass)
