@@ -22,9 +22,32 @@ const collegeSchema = new mongoose.Schema({
     required: true , 
     min:8 
   },
+  ShortDesc: {
+    type: String,
+    min:60
+  },
+  LongDesc: {
+    type: String,
+    min:200
+  },
+  Clglogo: {
+    type: String
+  },
   Doc: { 
     type: String,
     required: true 
+  },
+  Prospectus: { 
+    type: String
+  },
+  Gmap: { 
+    type: String
+  },
+  Contact: { 
+    type: Number
+  },
+  Site: { 
+    type: String
   },
   verified: {
     type: Boolean

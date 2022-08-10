@@ -34,7 +34,59 @@ const getCourse = async (req, res) => {
   }
 };
 
+const createCourse = async (req, res) => {
+  console.log(req.body);
+  const {CID ,CourseName , CourseDesc , CourseIntakeCap , AdmissionDOC } = req.body;
+  let course = await CoursesInfo.findOne({ CourseName: req.body.CourseName });
+  if (course) {
+    return res.status(200).send("That course already exisits!");
+  }
+  else{
+    const newCourse = new CoursesInfo({
+      CID: CID,
+      CourseName: CourseName,
+      CourseDesc: CourseDesc,
+      CourseIntakeCap: CourseIntakeCap,
+      AdmissionDOC: AdmissionDOC,
+    });
+    newCourse
+      .save()
+      .then(() => {
+        console.log(CourseName);
+        res.status(200).json({
+          message: "Course Created Successfully!!"
+        });
+      })
+      .catch((error) => {
+        res.json({
+          status: "FAILED",
+          message: "An error occured while creating course",
+        });
+      });
+  }
+}
+const updateCourse = async (req, res) => {
+  const { CID , CourseName , CourseDesc , CourseIntakeCap , AdmissionDOC   } = req.body;
+  // const changesobj = {CID , CourseName , CourseDesc , CourseIntakeCap , AdmissionDOC };
+  let CourseNameindb = await CoursesInfo.findOne({ CourseName });
+  if(CourseNameindb!=null)
+  {
+  const courseUpdate = await CoursesInfo.updateOne({ CourseName }, {$set:req.body} )
+  res.status(200).json({
+    message: "Course Updated Successfully!!"
+  })
+  }
+  else{
+    res.status(200).json({
+      message: "The Entered CourseName is incorrect"
+    })
+  }
+}
+
+
 module.exports = {
   getAllCourses,
   getCourse,
+  updateCourse,
+  createCourse
 };

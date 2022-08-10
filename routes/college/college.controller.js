@@ -534,6 +534,25 @@ const sendOtp = async (req, res) => {
   });
 };
 
+const updateCollege = async (req, res) => {
+  const { UID , ShortDesc , LongDesc , Clglogo , Prospectus , Gmap , Contact ,  Site   } = req.body;
+  let uidindb = await UniversityInfo.findOne({ UID });
+  console.log(uidindb)
+  if(uidindb!=null)
+  {
+  const universityUpdate = await UniversityInfo.updateOne({ UID }, {$set:req.body} )
+  res.status(200).json({
+    message: "College Updated Successfully"
+  })
+  }
+  else{
+    res.status(200).json({
+      message: "The Entered UID is incorrect"
+    })
+  }
+  
+}
+
 module.exports = {
   getAllColleges,
   getCollege,
@@ -545,4 +564,5 @@ module.exports = {
   rejected,
   updatePassword,
   sendOtp,
+  updateCollege
 };

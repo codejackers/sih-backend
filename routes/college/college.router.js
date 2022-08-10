@@ -11,6 +11,7 @@ const {
   rejected,
   updatePassword,
   sendOtp,
+  updateCollege
 } = require("./college.controller");
 
 const collegeRouter = express.Router();
@@ -20,6 +21,7 @@ collegeRouter.get("/college/:id", getCollege);
 collegeRouter.post("/college/register", registerCollege);
 collegeRouter.post("/college/login", loginCollege);
 collegeRouter.post("/college/updatePassword", updatePassword);
+collegeRouter.put("/college/updateCollege", updateCollege);
 collegeRouter.post("/college/sendotp", sendOtp);
 collegeRouter.get("/verify/:userId/:uniquestring", verificationCollege);
 collegeRouter.get("/reject/:userId/:uniquestring", rejectCollege);
