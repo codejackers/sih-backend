@@ -4,7 +4,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const http = require("http");
-const route = express.Router();
 
 const app = require("./app");
 

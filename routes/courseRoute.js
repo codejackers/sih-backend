@@ -1,11 +1,11 @@
-const express = require("express"); 
+const express = require("express");
 
-const { 
-    getAllCourses, 
-    getCourse , 
-    createCourse,
-    updateCourse
-} = require("./course.controller");
+const {
+  getAllCourses,
+  getCourse,
+  createCourse,
+  updateCourse,
+} = require("../controller/courseController");
 
 const courseRouter = express.Router();
 

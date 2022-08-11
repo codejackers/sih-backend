@@ -11,8 +11,8 @@ const {
   rejected,
   updatePassword,
   sendOtp,
-  updateCollege
-} = require("./college.controller");
+  updateCollege,
+} = require("../controller/collegeController");
 
 const collegeRouter = express.Router();
 

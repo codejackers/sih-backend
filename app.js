@@ -1,9 +1,9 @@
 const express = require("express");
 const cors = require("cors");
-const collegeRouter = require("./routes/college/college.router");
-const courseRouter = require("./routes/courses/course.router");
 
 // Routers
+const collegeRouter = require("./routes/collegeRoute");
+const courseRouter = require("./routes/courseRoute");
 
 const app = express();
 
@@ -11,7 +11,6 @@ app.use(cors());
 app.use(express.json());
 app.use(collegeRouter);
 app.use(courseRouter);
-
 
 app.get("/", (req, res) => {
   res.send("Hello World");
