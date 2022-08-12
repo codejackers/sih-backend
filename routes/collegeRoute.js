@@ -12,6 +12,7 @@ const {
   updatePassword,
   sendOtp,
   updateCollege,
+  deleteCollege,
 } = require("../controller/collegeController");
 
 const collegeRouter = express.Router();
@@ -22,6 +23,7 @@ collegeRouter.post("/college/register", registerCollege);
 collegeRouter.post("/college/login", loginCollege);
 collegeRouter.post("/college/updatePassword", updatePassword);
 collegeRouter.put("/college/updateCollege", updateCollege);
+collegeRouter.delete("/college/deleteCollege", deleteCollege);
 collegeRouter.post("/college/sendotp", sendOtp);
 collegeRouter.get("/verify/:userId/:uniquestring", verificationCollege);
 collegeRouter.get("/reject/:userId/:uniquestring", rejectCollege);

@@ -330,7 +330,7 @@ const updateCollege = async (req, res) => {
     let uidindb = await UniversityInfo.findOne({ UID });
 
     if (!uidindb)
-      res.status(200).json({
+      return res.status(200).json({
         message: "The Entered UID is incorrect",
       });
 
@@ -341,6 +341,28 @@ const updateCollege = async (req, res) => {
 
     res.status(200).json({
       message: "College Updated Successfully",
+    });
+  } catch (error) {
+    res.status(400).json({ status: "Failed", error: error });
+  }
+};
+
+const deleteCollege = async (req, res) => {
+  const { UID } = req.body;
+
+  try {
+    let uidindb = await UniversityInfo.findOne({ UID });
+
+    if (!uidindb)
+      return res.status(200).json({
+        message: "The Entered UID is incorrect",
+      });
+
+    const universityDelete = await UniversityInfo.deleteOne({ UID });
+
+    res.status(200).json({
+      message: "College Deleted Successfully",
+      deletedCollege: uidindb,
     });
   } catch (error) {
     res.status(400).json({ status: "Failed", error: error });
@@ -367,4 +389,5 @@ module.exports = {
   updatePassword,
   sendOtp,
   updateCollege,
+  deleteCollege,
 };

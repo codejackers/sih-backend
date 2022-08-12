@@ -86,9 +86,32 @@ const updateCourse = async (req, res) => {
   }
 };
 
+const deleteCourse = async (req, res) => {
+  const { CID } = req.body;
+
+  try {
+    let uidindb = await CoursesInfo.findOne({ CID });
+
+    if (!uidindb)
+      return res.status(200).json({
+        message: "The Entered CID is incorrect",
+      });
+
+    const courseDelete = await CoursesInfo.deleteOne({ CID });
+
+    res.status(200).json({
+      message: "Course Deleted Successfully",
+      deletedCourse: uidindb,
+    });
+  } catch (error) {
+    res.status(400).json({ status: "Failed", error: error });
+  }
+};
+
 module.exports = {
   getAllCourses,
   getCourse,
   updateCourse,
   createCourse,
+  deleteCourse,
 };
