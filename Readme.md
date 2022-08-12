@@ -1,29 +1,29 @@
 tasks remaining
 
-- delete for college(id) and course(id)
+- college + course integration
 - register wale me slot , uname
 - aws for doc
 
-
 tasks done
 
+- delete for college(id) and course(id)
 - Registration
 - Dashboard api
-	- College details update
-		short des
-		long desc
-		college logo
-		prospectus
-		full college add
-		g map
-		contact number
-		college web
-	- courses - create , update , getcourselist
-		CourseName
-		CourseDesc
-		CourseIntakeCap
-		AdmissionDOC
-- create 
+  - College details update
+    short des
+    long desc
+    college logo
+    prospectus
+    full college add
+    g map
+    contact number
+    college web
+  - courses - create , update , getcourselist
+    CourseName
+    CourseDesc
+    CourseIntakeCap
+    AdmissionDOC
+- create
 - zoom ka link jana chiye hai register krne wala ko + govn official
 - (if verify) => College gets verification success notification and can login in dashboard
 - (if reject) => College gets verification reject notification
