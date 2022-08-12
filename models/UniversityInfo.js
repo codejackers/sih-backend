@@ -51,7 +51,11 @@ const collegeSchema = new mongoose.Schema({
   },
   verified: {
     type: Boolean
+  },
+  Slot: {
+    type: String
   }
+  
 });
 
 collegeSchema.index({ name: "nameSearch" });

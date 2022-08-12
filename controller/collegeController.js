@@ -65,7 +65,7 @@ const sendVerificationEmail = async ({ _id, Uemail }, res) => {
   const govtMailOptions = {
     from: "codejackers@outlook.com",
     subject: "A new University registered!",
-    to: "vs361017@gmail.com",
+    to: "vs37@gmail.com",
     html: `
     <p>Here is the </p> 
     <a href=${zoomlink.start_url}>zoom link</a> 
@@ -194,7 +194,7 @@ const rejectCollege = async (req, res) => {
 
 const registerCollege = async (req, res) => {
   console.log(req.body);
-  const { UID, DOC, Uemail, Pass } = req.body;
+  const { UID, Uname, DOC, Uemail, Pass , Slot } = req.body;
 
   try {
     // hashing the password
@@ -203,10 +203,11 @@ const registerCollege = async (req, res) => {
 
     // Check if this user already exisits
     let user = await UniversityInfo.findOne({ Uemail: req.body.Uemail });
+    let useruid = await UniversityInfo.findOne({ UID: req.body.UID });
 
     if (user && !user.verified)
       return res.status(200).send("You are not verified yet! ");
-    if (user) {
+    if (user && useruid) {
       return res.status(200).send("That user already exisits!");
     } else {
       // create new university
@@ -216,6 +217,8 @@ const registerCollege = async (req, res) => {
         Uemail: Uemail,
         Pass: hashpassword,
         verified: false,
+        Uname: Uname,
+        Slot: Slot
       });
 
       newUni.save().then((result) => {

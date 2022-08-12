@@ -4,6 +4,7 @@ const cors = require("cors");
 // Routers
 const collegeRouter = require("./routes/collegeRoute");
 const courseRouter = require("./routes/courseRoute");
+const rateLimiterUsingThirdParty = require("./middlewares/rateLimiter");
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(cors());
 app.use(express.json());
 app.use(collegeRouter);
 app.use(courseRouter);
+app.use(rateLimiterUsingThirdParty);
 
 app.get("/", (req, res) => {
   res.send("Hello World");
