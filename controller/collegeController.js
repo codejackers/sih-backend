@@ -194,7 +194,7 @@ const rejectCollege = async (req, res) => {
 
 const registerCollege = async (req, res) => {
   console.log(req.body);
-  const { UID, Uname, DOC, Uemail, Pass , Slot } = req.body;
+  const { UID, Uname, DOC, Uemail, Pass, Slot } = req.body;
 
   try {
     // hashing the password
@@ -218,7 +218,7 @@ const registerCollege = async (req, res) => {
         Pass: hashpassword,
         verified: false,
         Uname: Uname,
-        Slot: Slot
+        Slot: Slot,
       });
 
       newUni.save().then((result) => {
@@ -250,9 +250,12 @@ const loginCollege = async (req, res) => {
         res.status(401).json({ message: "Password is incorrect" });
       } else {
         console.log("password matches");
+
+        let { Pass, verified, ...userData } = user._doc;
+
         return res
           .status(200)
-          .json({ message: "Login Successful", data: user });
+          .json({ message: "Login Successful", data: userData });
       }
     });
   } catch (error) {
@@ -344,6 +347,7 @@ const updateCollege = async (req, res) => {
 
     res.status(200).json({
       message: "College Updated Successfully",
+      uidindb,
     });
   } catch (error) {
     res.status(400).json({ status: "Failed", error: error });

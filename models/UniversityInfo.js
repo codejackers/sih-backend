@@ -1,64 +1,63 @@
 const mongoose = require("mongoose");
 
 const collegeSchema = new mongoose.Schema({
-  UID: { 
+  UID: {
     type: String,
-    required: true 
+    required: true,
+    unique: true,
   },
-  Uname: { 
-    type: String, 
-    required: false 
+  Uname: {
+    type: String,
+    required: false,
   },
-  UCity: { 
-    type: String, 
-    required: false 
+  UCity: {
+    type: String,
+    required: false,
   },
-  Uemail: { 
-    type: String, 
-    required: true 
+  Uemail: {
+    type: String,
+    required: true,
   },
-  Pass: { 
-    type: String, 
-    required: true , 
-    min:8 
+  Pass: {
+    type: String,
+    required: true,
+    min: 8,
   },
   ShortDesc: {
     type: String,
-    min:60
+    min: 60,
   },
   LongDesc: {
     type: String,
-    min:200
+    min: 200,
   },
   Clglogo: {
-    type: String
-  },
-  Doc: { 
     type: String,
-    required: true 
   },
-  Prospectus: { 
-    type: String
+  Doc: {
+    type: String,
+    required: true,
   },
-  Gmap: { 
-    type: String
+  Prospectus: {
+    type: String,
   },
-  Contact: { 
-    type: Number
+  Gmap: {
+    type: String,
   },
-  Site: { 
-    type: String
+  Contact: {
+    type: Number,
+  },
+  Site: {
+    type: String,
   },
   verified: {
-    type: Boolean
+    type: Boolean,
   },
   Slot: {
-    type: String
-  }
-  
+    type: String,
+  },
 });
 
 collegeSchema.index({ name: "nameSearch" });
 
 module.exports = mongoose.model("UniversityInfo", collegeSchema);
- 
