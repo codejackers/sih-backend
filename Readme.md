@@ -1,8 +1,8 @@
 tasks remaining
 
 - college + course integration
-- register wale me slot , uname
 - aws for doc
+- register wale me slot , uname
 
 tasks done
 

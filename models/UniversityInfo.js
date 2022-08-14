@@ -38,6 +38,12 @@ const collegeSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  Courses: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "CoursesInfo",
+    },
+  ],
   Prospectus: {
     type: String,
   },

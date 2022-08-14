@@ -13,6 +13,7 @@ const {
   sendOtp,
   updateCollege,
   deleteCollege,
+  deleteCourseFromCollege,
 } = require("../controller/collegeController");
 
 const collegeRouter = express.Router();
@@ -28,6 +29,7 @@ collegeRouter.post("/college/login", rateLimiterUsingThirdParty, loginCollege);
 collegeRouter.post("/college/updatePassword", updatePassword);
 collegeRouter.put("/college/updateCollege", updateCollege);
 collegeRouter.delete("/college/deleteCollege", deleteCollege);
+collegeRouter.delete("/college/deleteCourse", deleteCourseFromCollege);
 collegeRouter.post("/college/sendotp", rateLimiterUsingThirdParty, sendOtp);
 collegeRouter.get("/verify/:userId/:uniquestring", verificationCollege);
 collegeRouter.get("/reject/:userId/:uniquestring", rejectCollege);
