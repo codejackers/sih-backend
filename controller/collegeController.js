@@ -27,7 +27,7 @@ const getAllColleges = async (req, res) => {
       return res.status(200).json(colleges);
     }
 
-    const colleges = await UniversityInfo.find({});
+    const colleges = await UniversityInfo.find({})
     return res.status(200).json(colleges);
   } catch (error) {
     return res.status(500).json({
@@ -49,7 +49,7 @@ const getCollege = async (req, res) => {
 };
 
 // send verification email
-const sendVerificationEmail = async ({ _id, Uemail }, res) => {
+const sendVerificationEmail = async ({ _id, Uemail , Slot }, res) => {
   const currentUrl = "http://localhost:3000/";
 
   // unique verification string
@@ -77,6 +77,7 @@ const sendVerificationEmail = async ({ _id, Uemail }, res) => {
     <a href=${currentUrl + "reject/" + _id + "/" + uniquestring}>
       <button> Click here to reject.</button>
     </a>
+    <p> The assigned slot is ${Slot}</p>
         <p>Zoom password is: ${zoomlink.password} </p>`,
   };
 
@@ -89,6 +90,7 @@ const sendVerificationEmail = async ({ _id, Uemail }, res) => {
     html: `
     <p>Here is the </p> 
     <a href=${zoomlink.join_url}>zoom link</a> 
+    <p> The assigned slot is ${Slot}</p>
     <p> for verification meet </p>
     <p>Zoom password is: ${zoomlink.password} </p>
     

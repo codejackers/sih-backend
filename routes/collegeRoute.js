@@ -19,11 +19,7 @@ const collegeRouter = express.Router();
 
 collegeRouter.get("/college/list", getAllColleges);
 collegeRouter.get("/college/:id", getCollege);
-collegeRouter.post(
-  "/college/register",
-  rateLimiterUsingThirdParty,
-  registerCollege
-);
+collegeRouter.post( "/college/register",rateLimiterUsingThirdParty,registerCollege);
 collegeRouter.post("/college/login", rateLimiterUsingThirdParty, loginCollege);
 collegeRouter.post("/college/updatePassword", updatePassword);
 collegeRouter.put("/college/updateCollege", updateCollege);

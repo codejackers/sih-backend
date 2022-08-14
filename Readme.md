@@ -1,12 +1,12 @@
 tasks remaining
 
 - college + course integration
-- register wale me slot , uname
 - aws for doc
 
 tasks done
 
 - delete for college(id) and course(id)
+- register wale me slot , uname
 - Registration
 - Dashboard api
   - College details update
