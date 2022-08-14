@@ -7,6 +7,7 @@ tasks remaining
 tasks done
 
 - delete for college(id) and course(id)
+- register wale me slot , uname
 - Registration
 - Dashboard api
   - College details update
