@@ -28,7 +28,7 @@ const getAllColleges = async (req, res) => {
       return res.status(200).json(colleges);
     }
 
-    const colleges = await UniversityInfo.find({})
+    const colleges = await UniversityInfo.find({});
     return res.status(200).json(colleges);
   } catch (error) {
     return res.status(500).json({
@@ -50,7 +50,7 @@ const getCollege = async (req, res) => {
 };
 
 // send verification email
-const sendVerificationEmail = async ({ _id, Uemail , Slot }, res) => {
+const sendVerificationEmail = async ({ _id, Uemail, Slot }, res) => {
   const currentUrl = "http://localhost:3000/";
 
   // unique verification string
@@ -254,7 +254,7 @@ const loginCollege = async (req, res) => {
       } else {
         console.log("password matches");
 
-        let { Pass, verified, ...userData } = user._doc;
+        let { Pass, verified, OTP, ...userData } = user._doc;
 
         return res
           .status(200)
@@ -301,16 +301,18 @@ const sendOtp = async (req, res) => {
   const { Uemail } = req.body;
 
   try {
-    let user = await UniversityInfo.findOne({ Uemail: Uemail });
-    if (!user)
+    let college = await UniversityInfo.findOne({ Uemail: Uemail });
+    if (!college)
       return res.status(400).json({ message: "You are not registered" });
-    if (user && !user.verified)
+    if (college && !college.verified)
       return res.status(400).json({ message: "You are not verified yet" });
 
-    const OTP = uuidv4().slice(0, 6);
-    const salt = await bcrypt.genSalt(10);
-    const hashOTP = await bcrypt.hash(OTP, salt);
+    const OTP = uuidv4().slice(0, 4);
+    college.OTP = OTP;
+    // const salt = await bcrypt.genSalt(10);
+    // const hashOTP = await bcrypt.hash(OTP, salt);
 
+    const updatedClg = await UniversityInfo.updateOne({ Uemail }, college);
     const ResetPasswordOptions = {
       from: "codejackers@outlook.com",
       subject: "Reset Password OTP",
@@ -324,9 +326,39 @@ const sendOtp = async (req, res) => {
       res.status(200).json({
         status: "OTP verify Pending",
         message: "OTP sent in email",
-        hashedOTP: hashOTP,
+        updatedClg,
       });
     });
+  } catch (error) {
+    res.status(400).json({ status: "Failed", error: error });
+  }
+};
+
+const verifyOtp = async (req, res) => {
+  try {
+    const { OTP, UID } = req.body;
+
+    const college = await UniversityInfo.findOne({ UID });
+    if (!college)
+      return res.status(400).json({ message: "You are not registered" });
+
+    if (college && !college.verified)
+      return res.status(400).json({ message: "You are not verified yet" });
+
+    if (!OTP) return res.status(400).json({ message: "OTP cannot be null" });
+
+    if (OTP === college.OTP) {
+      college.OTP = "";
+      const updatedClg = await UniversityInfo.updateOne({ UID }, college);
+
+      return res
+        .status(201)
+        .json({ status: "success", message: "OTP verified" });
+    }
+
+    res
+      .status(403)
+      .json({ status: "failed", message: "You have entered wrong OTP" });
   } catch (error) {
     res.status(400).json({ status: "Failed", error: error });
   }
@@ -345,12 +377,13 @@ const updateCollege = async (req, res) => {
 
     const universityUpdate = await UniversityInfo.updateOne(
       { UID },
-      { $set: req.body }
+      { $set: req.body },
+      { new: true }
     );
 
     res.status(200).json({
       message: "College Updated Successfully",
-      uidindb,
+      universityUpdate,
     });
   } catch (error) {
     res.status(400).json({ status: "Failed", error: error });
@@ -433,6 +466,7 @@ module.exports = {
   rejected,
   updatePassword,
   sendOtp,
+  verifyOtp,
   updateCollege,
   deleteCollege,
   deleteCourseFromCollege,

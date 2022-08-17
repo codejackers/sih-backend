@@ -11,6 +11,7 @@ const {
   rejected,
   updatePassword,
   sendOtp,
+  verifyOtp,
   updateCollege,
   deleteCollege,
   deleteCourseFromCollege,
@@ -20,13 +21,18 @@ const collegeRouter = express.Router();
 
 collegeRouter.get("/college/list", getAllColleges);
 collegeRouter.get("/college/:id", getCollege);
-collegeRouter.post( "/college/register",rateLimiterUsingThirdParty,registerCollege);
+collegeRouter.post(
+  "/college/register",
+  rateLimiterUsingThirdParty,
+  registerCollege
+);
 collegeRouter.post("/college/login", rateLimiterUsingThirdParty, loginCollege);
 collegeRouter.post("/college/updatePassword", updatePassword);
 collegeRouter.put("/college/updateCollege", updateCollege);
 collegeRouter.delete("/college/deleteCollege", deleteCollege);
 collegeRouter.delete("/college/deleteCourse", deleteCourseFromCollege);
 collegeRouter.post("/college/sendotp", rateLimiterUsingThirdParty, sendOtp);
+collegeRouter.post("/college/verifyotp", rateLimiterUsingThirdParty, verifyOtp);
 collegeRouter.get("/verify/:userId/:uniquestring", verificationCollege);
 collegeRouter.get("/reject/:userId/:uniquestring", rejectCollege);
 collegeRouter.get("/verified", verified);

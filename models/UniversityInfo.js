@@ -8,11 +8,11 @@ const collegeSchema = new mongoose.Schema({
   },
   Uname: {
     type: String,
-    required: false,
+    required: true,
   },
   UCity: {
     type: String,
-    required: false,
+    default: "",
   },
   Uemail: {
     type: String,
@@ -23,16 +23,22 @@ const collegeSchema = new mongoose.Schema({
     required: true,
     min: 8,
   },
+  OTP: {
+    type: String,
+  },
   ShortDesc: {
     type: String,
     min: 60,
+    default: "",
   },
   LongDesc: {
     type: String,
     min: 200,
+    default: "",
   },
   Clglogo: {
     type: String,
+    default: "",
   },
   Doc: {
     type: String,
@@ -42,25 +48,32 @@ const collegeSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "CoursesInfo",
+      default: "",
     },
   ],
   Prospectus: {
     type: String,
+    default: "",
   },
   Gmap: {
     type: String,
+    default: "",
   },
   Contact: {
     type: Number,
+    default: "",
   },
   Site: {
     type: String,
+    default: "",
   },
   verified: {
     type: Boolean,
+    default: "",
   },
   Slot: {
     type: String,
+    default: "",
   },
 });
 
