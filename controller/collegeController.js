@@ -41,10 +41,25 @@ const getCollege = async (req, res) => {
   try {
     const id = req.params.id;
     const college = await UniversityInfo.findById(id).populate("Courses");
-    return res.status(200).json(college);
+
+    let { Doc, Pass, UID, Uemail, Uname, Clglogo, Courses, UCity, _id } =
+      college._doc;
+
+    return res.status(200).json({
+      Doc,
+      Pass,
+      UID,
+      Uemail,
+      Uname,
+      UCity,
+      _id,
+      Clglogo,
+      Courses,
+    });
   } catch (error) {
     return res.status(500).json({
       message: "Server error",
+      error,
     });
   }
 };
@@ -326,7 +341,6 @@ const sendOtp = async (req, res) => {
       res.status(200).json({
         status: "OTP verify Pending",
         message: "OTP sent in email",
-        updatedClg,
       });
     });
   } catch (error) {
@@ -336,9 +350,9 @@ const sendOtp = async (req, res) => {
 
 const verifyOtp = async (req, res) => {
   try {
-    const { OTP, UID } = req.body;
+    const { OTP, Uemail } = req.body;
 
-    const college = await UniversityInfo.findOne({ UID });
+    const college = await UniversityInfo.findOne({ Uemail });
     if (!college)
       return res.status(400).json({ message: "You are not registered" });
 
@@ -349,7 +363,7 @@ const verifyOtp = async (req, res) => {
 
     if (OTP === college.OTP) {
       college.OTP = "";
-      const updatedClg = await UniversityInfo.updateOne({ UID }, college);
+      const updatedClg = await UniversityInfo.updateOne({ Uemail }, college);
 
       return res
         .status(201)
@@ -383,7 +397,6 @@ const updateCollege = async (req, res) => {
 
     res.status(200).json({
       message: "College Updated Successfully",
-      universityUpdate,
     });
   } catch (error) {
     res.status(400).json({ status: "Failed", error: error });

@@ -9,6 +9,7 @@ const collegeSchema = new mongoose.Schema({
   Uname: {
     type: String,
     required: true,
+    default: "",
   },
   UCity: {
     type: String,
@@ -62,6 +63,7 @@ const collegeSchema = new mongoose.Schema({
   Contact: {
     type: Number,
     default: "",
+    min: 10,
   },
   Site: {
     type: String,
