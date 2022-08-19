@@ -14,7 +14,6 @@ const {
   verifyOtp,
   updateCollege,
   deleteCollege,
-  deleteCourseFromCollege,
 } = require("../controller/collegeController");
 
 const collegeRouter = express.Router();
@@ -24,7 +23,6 @@ collegeRouter.get("/college/:id", getCollege);
 collegeRouter.post("/college/updatePassword", updatePassword);
 collegeRouter.put("/college/updateCollege", updateCollege);
 collegeRouter.delete("/college/deleteCollege", deleteCollege);
-collegeRouter.delete("/college/deleteCourse", deleteCourseFromCollege);
 collegeRouter.get("/verify/:userId/:uniqueString", verificationCollege);
 collegeRouter.get("/reject/:userId/:uniqueString", rejectCollege);
 collegeRouter.post(
