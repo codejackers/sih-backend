@@ -21,21 +21,27 @@ const collegeRouter = express.Router();
 
 collegeRouter.get("/college/list", getAllColleges);
 collegeRouter.get("/college/:id", getCollege);
-collegeRouter.post(
-  "/college/register",
-  rateLimiterUsingThirdParty,
-  registerCollege
-);
-collegeRouter.post("/college/login", rateLimiterUsingThirdParty, loginCollege);
 collegeRouter.post("/college/updatePassword", updatePassword);
 collegeRouter.put("/college/updateCollege", updateCollege);
 collegeRouter.delete("/college/deleteCollege", deleteCollege);
 collegeRouter.delete("/college/deleteCourse", deleteCourseFromCollege);
-collegeRouter.post("/college/sendotp", rateLimiterUsingThirdParty, sendOtp);
-collegeRouter.post("/college/verifyotp", rateLimiterUsingThirdParty, verifyOtp);
-collegeRouter.get("/verify/:userId/:uniquestring", verificationCollege);
-collegeRouter.get("/reject/:userId/:uniquestring", rejectCollege);
-collegeRouter.get("/verified", verified);
-collegeRouter.get("/rejected", rejected);
+collegeRouter.get("/verify/:userId/:uniqueString", verificationCollege);
+collegeRouter.get("/reject/:userId/:uniqueString", rejectCollege);
+collegeRouter.post(
+  "/college/register",
+  rateLimiterUsingThirdParty(50),
+  registerCollege
+);
+collegeRouter.post(
+  "/college/login",
+  rateLimiterUsingThirdParty(50),
+  loginCollege
+);
+collegeRouter.post("/college/sendotp", rateLimiterUsingThirdParty(3), sendOtp);
+collegeRouter.post(
+  "/college/verifyotp",
+  rateLimiterUsingThirdParty(3),
+  verifyOtp
+);
 
 module.exports = collegeRouter;

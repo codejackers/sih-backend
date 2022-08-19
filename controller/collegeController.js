@@ -447,23 +447,13 @@ const deleteCourseFromCollege = async (req, res) => {
   }
 };
 
-const verified = async (req, res) => {
-  res.send("verified");
-};
-
-const rejected = async (req, res) => {
-  res.send("rejected");
-};
-
 module.exports = {
   getAllColleges,
   getCollege,
   registerCollege,
   verificationCollege,
-  verified,
   rejectCollege,
   loginCollege,
-  rejected,
   updatePassword,
   sendOtp,
   verifyOtp,

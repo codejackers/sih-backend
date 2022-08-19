@@ -1,12 +1,11 @@
 tasks remaining
 
-- (?)
+- createCourseForCollege API
 
 tasks done
 
 - college + course integration
 - delete for college(id) and course(id)
-- register wale me slot , uname
 - register wale me slot , uname
 - Registration
 - Dashboard api

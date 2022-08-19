@@ -37,7 +37,7 @@ const collegeSchema = new mongoose.Schema({
     min: 200,
     default: "",
   },
-  Clglogo: {
+  Logo: {
     type: String,
     default: "",
   },
