@@ -3,7 +3,7 @@ const UniversityInfo = require("../models/UniversityInfo");
 
 const createCourse = async (req, res) => {
   try {
-    const { UID, CID, CourseName, CourseDesc, CourseIntakeCap, AdmissionDOC } =
+    const { UID, CourseName, CourseDesc, CourseIntakeCap, AdmissionDOC } =
       req.body;
 
     let college = await UniversityInfo.findOne({ UID });
@@ -15,7 +15,6 @@ const createCourse = async (req, res) => {
 
     // create new course
     const newCourse = new CoursesInfo({
-      CID: CID,
       CourseName: CourseName,
       CourseDesc: CourseDesc,
       CourseIntakeCap: CourseIntakeCap,
@@ -46,7 +45,7 @@ const createCourse = async (req, res) => {
 
 const deleteCourse = async (req, res) => {
   try {
-    const { UID, CID } = req.body;
+    const { UID, _id: CID } = req.body;
     let college = await UniversityInfo.findOne({ UID });
 
     if (!college)
