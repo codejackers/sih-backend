@@ -45,7 +45,7 @@ const createCourse = async (req, res) => {
 
 const deleteCourse = async (req, res) => {
   try {
-    const { UID, _id: CID } = req.body;
+    const { UID, _id } = req.body;
     let college = await UniversityInfo.findOne({ UID });
 
     if (!college)
@@ -53,7 +53,7 @@ const deleteCourse = async (req, res) => {
         message: "The Entered UID is incorrect",
       });
 
-    let udpatedObj = college.Courses.filter((item) => item.toString() !== CID);
+    let udpatedObj = college.Courses.filter((item) => item.toString() !== _id);
 
     let newArr = [];
 
@@ -68,10 +68,10 @@ const deleteCourse = async (req, res) => {
     );
 
     // delete from course model
-    const courseDelete = await CoursesInfo.deleteOne({ CID });
+    const courseDelete = await CoursesInfo.deleteOne({ _id });
 
     res.status(200).json({
-      message: `Course Id ${CID} has been deleted from college successfully`,
+      message: `Course Id ${_id} has been deleted from college successfully`,
     });
   } catch (error) {
     res.status(400).json({ status: "Failed", error: error });
