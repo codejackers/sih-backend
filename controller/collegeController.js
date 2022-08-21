@@ -68,7 +68,7 @@ const sendVerificationEmail = async ({ _id, Uemail, Slot }, res) => {
   const govtMailOptions = {
     from: "codejackers@outlook.com",
     subject: "A new University registered!",
-    to: "vs37@gmail.com",
+    to: "vs361017@gmail.com",
     html: `
     <p>Here is the </p> 
     <a href=${zoomlink.start_url}>zoom link</a> 
@@ -128,7 +128,7 @@ const sendVerificationEmail = async ({ _id, Uemail, Slot }, res) => {
 };
 
 const verificationCollege = async (req, res) => {
-  let { userId, uniquestring } = req.params;
+  let { userId, uniqueString } = req.params;
 
   try {
     const result = await UserVerification.find({ userId });
@@ -146,7 +146,7 @@ const verificationCollege = async (req, res) => {
         .status(200)
         .json({ status: "Failed", message: "Verification Link has expireed" });
     } else {
-      const isMatch = bcrypt.compare(uniquestring, hashUniqueString);
+      const isMatch = bcrypt.compare(uniqueString, hashUniqueString);
 
       if (!isMatch)
         res
@@ -163,7 +163,7 @@ const verificationCollege = async (req, res) => {
 };
 
 const rejectCollege = async (req, res) => {
-  let { userId, uniquestring } = req.params;
+  let { userId, uniqueString } = req.params;
 
   try {
     const result = await UserVerification.find({ userId });
@@ -181,7 +181,7 @@ const rejectCollege = async (req, res) => {
         .status(200)
         .json({ status: "Failed", message: "Reject Link has expireed" });
     } else {
-      const isMatch = bcrypt.compare(uniquestring, hashUniqueString);
+      const isMatch = bcrypt.compare(uniqueString, hashUniqueString);
 
       if (!isMatch)
         res
@@ -199,9 +199,9 @@ const rejectCollege = async (req, res) => {
 
 const registerCollege = async (req, res) => {
   console.log(req.body);
-  const { UID, Uname, DOC, Uemail, Pass, Slot } = req.body;
-
   try {
+    const { UID, Uname, DOC, Uemail, Pass, Slot } = req.body;
+
     // hashing the password
     const salt = await bcrypt.genSalt(10);
     const hashpassword = await bcrypt.hash(Pass, salt);
