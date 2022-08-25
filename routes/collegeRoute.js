@@ -23,8 +23,8 @@ collegeRouter.get("/college/:id", getCollege);
 collegeRouter.post("/college/updatePassword", updatePassword);
 collegeRouter.put("/college/updateCollege", updateCollege);
 collegeRouter.delete("/college/deleteCollege", deleteCollege);
-collegeRouter.get("/verify/:userId/:uniqueString", verificationCollege);
-collegeRouter.get("/reject/:userId/:uniqueString", rejectCollege);
+// collegeRouter.get("/verify/:userId/:uniqueString", verificationCollege);
+// collegeRouter.get("/reject/:userId/:uniqueString", rejectCollege);
 collegeRouter.post(
   "/college/register",
   rateLimiterUsingThirdParty(50),

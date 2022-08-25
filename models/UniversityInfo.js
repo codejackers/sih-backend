@@ -43,12 +43,18 @@ const collegeSchema = new mongoose.Schema({
   },
   Doc: {
     type: String,
-    required: true,
   },
   Courses: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "CoursesInfo",
+      default: "",
+    },
+  ],
+  Notifications: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "NotificationInfo",
       default: "",
     },
   ],

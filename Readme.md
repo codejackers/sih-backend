@@ -1,6 +1,6 @@
 tasks remaining
 
-- createCourseForCollege API
+- query - email verification (otp) , ip detection.
 
 tasks done
 
