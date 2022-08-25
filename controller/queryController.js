@@ -1,6 +1,7 @@
 const QueryInfo = require("../models/QueryInfo");
 const { transporter } = require("../utils/lib");
 const { default: fetch } = require("node-fetch");
+const UniversityInfo = require("../models/UniversityInfo");
 
 const createQuery = async (req, res) => {
   try {
@@ -14,6 +15,7 @@ const createQuery = async (req, res) => {
       Doc,
     } = req.body;
 
+    // send mail to clg that u got reported
     const collegeMailOption = {
       from: "codejackers@outlook.com",
       subject: "Your college is reported as suspicious",
@@ -36,6 +38,7 @@ const createQuery = async (req, res) => {
     </ul>`,
     };
 
+    // send mail to user that he has reported following things
     const queryMailOption = {
       from: "codejackers@outlook.com",
       subject: "You've reported a college",
@@ -61,6 +64,18 @@ const createQuery = async (req, res) => {
       </ul>`,
     };
 
+    if (!CollegeName)
+      return res
+        .status(404)
+        .json({ message: "You must specify the college name" });
+
+    const college = await UniversityInfo.findOne({
+      Uname: { $regex: CollegeName, $options: "i" },
+    });
+
+    if (!college)
+      return res.status(200).json({ message: "Given college does not exists" });
+
     const newQuery = new QueryInfo({
       UserContact,
       Message,
@@ -72,10 +87,19 @@ const createQuery = async (req, res) => {
     });
     await newQuery.save();
 
+    // update report count of clg
+    const universityUpdate = await UniversityInfo.updateOne(
+      { UID: college.UID },
+      { $set: { ReportCount: college.ReportCount + 1 } }
+    );
+
+    // if email exists then send mail to clg
     if (CollegeContact) {
       await transporter.sendMail(collegeMailOption);
     }
-    await transporter.sendMail(queryMailOption);
+    if (UserContact) {
+      await transporter.sendMail(queryMailOption);
+    }
 
     return res
       .status(200)
