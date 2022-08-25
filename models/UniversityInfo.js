@@ -4,7 +4,6 @@ const collegeSchema = new mongoose.Schema({
   UID: {
     type: String,
     required: true,
-    unique: true,
   },
   Uname: {
     type: String,
@@ -79,9 +78,9 @@ const collegeSchema = new mongoose.Schema({
     type: Boolean,
     default: "",
   },
-  Slot: {
-    type: String,
-    default: "",
+  ReportCount: {
+    type: Number,
+    default: 0,
   },
 });
 

@@ -3,11 +3,12 @@ const mongoose = require("mongoose");
 const querySchema = new mongoose.Schema({
   UserContact: {
     type: String,
-    required: true,
+    default: "",
   },
   Message: {
     type: String,
     min: 200,
+    default: "",
   },
   UserName: {
     type: String,
@@ -16,16 +17,21 @@ const querySchema = new mongoose.Schema({
   },
   CollegeName: {
     type: String,
+    sparse: true,
     required: true,
   },
   CollegeContact: {
     type: String,
+    default: "",
+    sparse: true,
   },
   CollegeWebsite: {
     type: String,
+    default: "",
   },
   Doc: {
     type: String,
+    default: "",
   },
 });
 

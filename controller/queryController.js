@@ -1,5 +1,7 @@
 const QueryInfo = require("../models/QueryInfo");
 const { transporter } = require("../utils/lib");
+const { default: fetch } = require("node-fetch");
+const UniversityInfo = require("../models/UniversityInfo");
 
 const createQuery = async (req, res) => {
   try {
@@ -13,6 +15,7 @@ const createQuery = async (req, res) => {
       Doc,
     } = req.body;
 
+    // send mail to clg that u got reported
     const collegeMailOption = {
       from: "codejackers@outlook.com",
       subject: "Your college is reported as suspicious",
@@ -35,6 +38,7 @@ const createQuery = async (req, res) => {
     </ul>`,
     };
 
+    // send mail to user that he has reported following things
     const queryMailOption = {
       from: "codejackers@outlook.com",
       subject: "You've reported a college",
@@ -60,6 +64,18 @@ const createQuery = async (req, res) => {
       </ul>`,
     };
 
+    if (!CollegeName)
+      return res
+        .status(404)
+        .json({ message: "You must specify the college name" });
+
+    const college = await UniversityInfo.findOne({
+      Uname: { $regex: CollegeName, $options: "i" },
+    });
+
+    if (!college)
+      return res.status(200).json({ message: "Given college does not exists" });
+
     const newQuery = new QueryInfo({
       UserContact,
       Message,
@@ -71,10 +87,19 @@ const createQuery = async (req, res) => {
     });
     await newQuery.save();
 
+    // update report count of clg
+    const universityUpdate = await UniversityInfo.updateOne(
+      { UID: college.UID },
+      { $set: { ReportCount: college.ReportCount + 1 } }
+    );
+
+    // if email exists then send mail to clg
     if (CollegeContact) {
       await transporter.sendMail(collegeMailOption);
     }
-    await transporter.sendMail(queryMailOption);
+    if (UserContact) {
+      await transporter.sendMail(queryMailOption);
+    }
 
     return res
       .status(200)
@@ -92,19 +117,28 @@ const captchaVerify = async (req, res) => {
     return res.json({ success: false, msg: "Please select captcha" });
 
   // Secret key
-  const secretKey = "6LeQZKghAAAAAGUX_vX2CCVwltV5eoB7PJwefavB";
+  const secretKey = "6LfSr6ghAAAAAHydd0hPC6w6LwTatQ3HGL-9LssD";
 
   // Verify URL
-  const query = stringify({
+  const query = JSON.stringify({
     secret: secretKey,
     response: req.body.captcha,
     remoteip: req.connection.remoteAddress,
   });
-  const verifyURL = `https://google.com/recaptcha/api/siteverify?${query}`;
+  // console.log(query);
+
+  const verifyURL = `https://google.com/recaptcha/api/siteverify`;
+
+  const bodyValue = `secret=${secretKey}&response=${req.body.captcha}`;
 
   // Make a request to verifyURL
-  const body = await fetch(verifyURL).then((res) => res.json());
+  const body = await fetch(verifyURL, {
+    method: "post",
+    body: bodyValue,
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  }).then((res) => res.json());
 
+  // console.log(body);
   // If not successful
   if (body.success !== undefined && !body.success)
     return res.json({ success: false, msg: "Failed captcha verification" });
