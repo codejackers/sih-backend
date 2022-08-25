@@ -1,6 +1,6 @@
 tasks remaining
 
-- query - email verification (otp) , ip detection.
+- query - email verification (otp)
 
 tasks done
 

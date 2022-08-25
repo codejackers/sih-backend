@@ -1,9 +1,12 @@
 // models
 const UniversityInfo = require("../models/UniversityInfo");
 const CoursesInfo = require("../models/CoursesInfo");
+const GovernmentInfo = require("../models/GovernmentInfo");
 const UserVerification = require("../models/UserVerification");
 
 const bcrypt = require("bcrypt");
+const checksum = require("checksum");
+const { DownloaderHelper } = require("node-downloader-helper");
 const { v4: uuidv4 } = require("uuid"); // for unique string
 const capitalizeString = require("capitalize-string");
 const { transporter, getZoomLink } = require("../utils/lib");
@@ -65,28 +68,57 @@ const registerCollege = async (req, res) => {
     const hashpassword = await bcrypt.hash(Pass, salt);
 
     // Check if this uni already exisits
-    let college = await UniversityInfo.findOne({ UID: req.body.UID });
-    if (college)
-      return res.status(200).send({ message: "You are already registered" });
+    // let college = await UniversityInfo.findOne({ UID: req.body.UID });
+    // if (college)
+    //   return res.status(200).send({ message: "You are already registered" });
 
     // Send /gov/verify/token -> token / uid
 
     const body = { UID: UID };
-    const getTokenFromGov = await fetch(`http://localhost:3001/govt/getToken`, {
+    const getTokenFromGov = await fetch(`http://localhost:3000/govt/getToken`, {
       method: "post",
       body: JSON.stringify(body),
       headers: { "Content-Type": "application/json" },
     });
 
     const tokenData = await getTokenFromGov.json();
-    const { UID: uidFromGov, VerificationToken: tokenFromGov } = tokenData;
+    const {
+      UID: uidFromGov,
+      VerificationToken: tokenFromGov,
+      Md5SumHash: hashfromGov,
+    } = tokenData;
 
     // req.token + req.uid === token / uid
-    if (uidFromGov !== UID && tokenFromGov !== VerificationToken) {
-      // return failed, token not verified
+    // if (uidFromGov !== UID && tokenFromGov !== VerificationToken) {
+    //   // return failed, token not verified
+    //   return res.status(403).json({
+    //     status: "failed",
+    //     message: "Your token is not valid",
+    //   });
+    // }
+
+    // check for checksum of doc
+    const dl = await new DownloaderHelper(req.body.DOC, __dirname);
+    await dl
+      .on("end", () => console.log("Download Completed"))
+      .then(() => {
+        checksum.file(`${__dirname}/pdf.pdf`, function (err, sum) {
+          console.log(sum, " abhi");
+          if (sum === hashfromGov) {
+            console.log("yay yay");
+          }
+        });
+      });
+    await dl.on("error", (err) => console.log("Download Failed", err));
+    dl.start().catch((err) => console.error(err));
+
+    // console.log(req.body.DOC);
+    // cs = checksum("__dirname");
+    // console.log(cs);
+    if (cs !== hashfromGov) {
       return res.status(403).json({
         status: "failed",
-        message: "Your token is not valid",
+        message: "Your Doc verification is failed, please use legit documents",
       });
     }
 

@@ -3,10 +3,11 @@ const mongoose = require("mongoose");
 const govtSchema = new mongoose.Schema({
   UID: {
     type: String,
-    required: true,
-    unique: true,
   },
   VerificationToken: {
+    type: String,
+  },
+  Md5SumHash: {
     type: String,
   },
 });
