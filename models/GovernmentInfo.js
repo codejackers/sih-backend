@@ -8,8 +8,6 @@ const govtSchema = new mongoose.Schema({
   },
   VerificationToken: {
     type: String,
-    required: true,
-    unique: true,
   },
 });
 

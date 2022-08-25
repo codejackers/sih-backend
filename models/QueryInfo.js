@@ -20,12 +20,11 @@ const querySchema = new mongoose.Schema({
   },
   CollegeContact: {
     type: String,
-    required: true,
   },
   CollegeWebsite: {
     type: String,
   },
-  Photo: {
+  Doc: {
     type: String,
   },
 });

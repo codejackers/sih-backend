@@ -1,9 +1,10 @@
 const express = require("express");
 
-const { createQuery } = require("../controller/queryController");
+const { createQuery, captchaVerify } = require("../controller/queryController");
 
 const queryRouter = express.Router();
 
 queryRouter.post("/query/createQuery", createQuery);
+queryRouter.post("/captchaVerify", captchaVerify);
 
 module.exports = queryRouter;

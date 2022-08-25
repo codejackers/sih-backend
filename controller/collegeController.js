@@ -7,6 +7,7 @@ const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid"); // for unique string
 const capitalizeString = require("capitalize-string");
 const { transporter, getZoomLink } = require("../utils/lib");
+const { default: fetch } = require("node-fetch");
 
 const getAllColleges = async (req, res) => {
   try {
@@ -40,7 +41,9 @@ const getAllColleges = async (req, res) => {
 const getCollege = async (req, res) => {
   try {
     const id = req.params.id;
-    const college = await UniversityInfo.findById(id).populate("Courses");
+    const college = await UniversityInfo.findById(id)
+      .populate("Courses")
+      .populate("Notifications");
 
     return res.status(200).json({ college });
   } catch (error) {
@@ -53,35 +56,53 @@ const getCollege = async (req, res) => {
 
 const registerCollege = async (req, res) => {
   try {
-    console.log(req.body);
-    const { UID, Uname, DOC, Uemail, Pass, Slot } = req.body;
+    // details
+    // console.log(req.body);
+    const { UID, Uname, DOC, Uemail, Pass, VerificationToken } = req.body;
 
+    // hashing the password
     const salt = await bcrypt.genSalt(10);
     const hashpassword = await bcrypt.hash(Pass, salt);
 
-    // details
-    // hashing the password
     // Check if this uni already exisits
+    let college = await UniversityInfo.findOne({ UID: req.body.UID });
+    if (college)
+      return res.status(200).send({ message: "You are already registered" });
+
     // Send /gov/verify/token -> token / uid
+
+    const body = { UID: UID };
+    const getTokenFromGov = await fetch(`http://localhost:3001/govt/getToken`, {
+      method: "post",
+      body: JSON.stringify(body),
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const tokenData = await getTokenFromGov.json();
+    const { UID: uidFromGov, VerificationToken: tokenFromGov } = tokenData;
+
     // req.token + req.uid === token / uid
-    // save() return success
-    // return failed, token not verified
-
-    let user = await UniversityInfo.findOne({ Uemail: req.body.Uemail });
-    // let useruid = await UniversityInfo.findOne({ UID: req.body.UID });
-
-    // if (user && !user.verified)
-    //   return res.status(200).send("You are not verified yet! ");
-    if (user && useruid) {
-      return res.status(200).send("That user already exisits!");
-    } else {
-      // create new university
-      const newUni = new UniversityInfo(req.boy);
-
-      await newUni.save();
-
-      return res.status(200).json({ message: "College Register" });
+    if (uidFromGov !== UID && tokenFromGov !== VerificationToken) {
+      // return failed, token not verified
+      return res.status(403).json({
+        status: "failed",
+        message: "Your token is not valid",
+      });
     }
+
+    // save() return success
+    const newUni = new UniversityInfo({
+      UID,
+      Uname,
+      DOC,
+      Uemail,
+      Pass: hashpassword,
+      VerificationToken,
+      verified: true,
+    });
+    await newUni.save();
+
+    return res.status(200).json({ message: "College Registered" });
   } catch (error) {
     res.status(400).json({ status: "Failed", error: error });
   }
