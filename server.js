@@ -4,7 +4,7 @@ const http = require("http");
 const pdf = require("pdf-parse");
 const app = require("./app");
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 
 require("dotenv").config();
 

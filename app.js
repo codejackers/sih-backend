@@ -5,6 +5,7 @@ const cors = require("cors");
 const collegeRouter = require("./routes/collegeRoute");
 const courseRouter = require("./routes/courseRoute");
 const queryRouter = require("./routes/queryRoute");
+const aiuRouter = require("./routes/aiuRoute");
 const govtRouter = require("./routes/govtRoute");
 const notifcationRouter = require("./routes/notificationRoute");
 
@@ -16,6 +17,7 @@ app.use(collegeRouter);
 app.use(courseRouter);
 app.use(queryRouter);
 app.use(govtRouter);
+app.use(aiuRouter);
 app.use(notifcationRouter);
 
 app.get("/", (req, res) => {

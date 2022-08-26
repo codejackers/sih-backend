@@ -7,6 +7,7 @@ const {
   verificationCollege,
   verified,
   rejectCollege,
+  registerNewCollege,
   loginCollege,
   rejected,
   updatePassword,
@@ -29,6 +30,11 @@ collegeRouter.post(
   "/college/register",
   rateLimiterUsingThirdParty(50),
   registerCollege
+);
+collegeRouter.post(
+  "/college/newRegister",
+  rateLimiterUsingThirdParty(50),
+  registerNewCollege
 );
 collegeRouter.post(
   "/college/login",
