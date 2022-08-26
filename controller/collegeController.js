@@ -3,6 +3,7 @@ const UniversityInfo = require("../models/UniversityInfo");
 const CoursesInfo = require("../models/CoursesInfo");
 const GovernmentInfo = require("../models/GovernmentInfo");
 const UserVerification = require("../models/UserVerification");
+const AIUInfo = require("../models/AIUInfo");
 
 const bcrypt = require("bcrypt");
 const md5File = require("md5-file");
@@ -63,7 +64,7 @@ const registerCollege = async (req, res) => {
   try {
     // details
     // console.log(req.body);
-    const { UID, Uname, DOC, Uemail, Pass, VerificationToken } = req.body;
+    const { UID, Uname, DOC, Uemail, Pass } = req.body;
 
     // hashing the password
     const salt = await bcrypt.genSalt(10);
@@ -77,6 +78,85 @@ const registerCollege = async (req, res) => {
     // Send /gov/verify/token -> token / uid
 
     const body = { UID: UID };
+    // check if email exist on AIU db
+
+    let collegeInAiu = await AIUInfo.findOne({ Uemail: Uemail });
+
+    console.log(collegeInAiu.Uemail);
+    // if found send verification email
+    if (req.body.Uemail === collegeInAiu.Uemail) {
+      const currentUrl = "http://localhost:3001/";
+      const uniquestring = uuidv4() + Uemail;
+
+      const saltrounds = 10;
+
+      const hashUniqueString = await bcrypt.hash(uniquestring, saltrounds);
+
+      const collegeMailOptions = {
+        from: "codejackers@gmail.com",
+        subject: "OTP Verification",
+        to: collegeInAiu.Uemail,
+        html: `
+        <a href=${currentUrl + "verify/" + Uemail + "/" + uniquestring}>
+              <button> Click here to verify.</button>
+            </a>
+        `,
+      };
+
+      const newVerification = await new UserVerification({
+        userId: Uemail,
+        uniquestring: hashUniqueString,
+        createdAt: Date.now(),
+        expiresAt: Date.now() + 21600000,
+      });
+
+      const newUni = await new UniversityInfo({
+        UID,
+        Uname,
+        DOC,
+        Uemail,
+        Pass: hashpassword,
+        verified: false,
+      });
+      await newUni.save();
+
+      await newVerification.save();
+
+      await transporter.sendMail(collegeMailOptions);
+
+      return res
+        .status(200)
+        .json({ status: "Registration Pending", message: "token sent" });
+    } else {
+      return res.status(400).json({
+        status: "failed",
+        message: "This college doesnot exists in AIU DB",
+      });
+    }
+
+    return res.status(200).json({ message: "College Registered" });
+  } catch (error) {
+    return res.status(400).json({ status: "Failed", error: error });
+  }
+};
+const registerNewCollege = async (req, res) => {
+  try {
+    // details
+    // console.log(req.body);
+    const { UID, Uname, DOC, Uemail, Pass } = req.body;
+    // hashing the password
+    const salt = await bcrypt.genSalt(10);
+    const hashpassword = await bcrypt.hash(Pass, salt);
+
+    // Check if this uni already exists
+    let college = await UniversityInfo.findOne({ UID });
+    if (college)
+      return res.status(200).send({ message: "You are already registered" });
+
+    // doc work
+
+    const body = { UID };
+
     const getTokenFromGov = await fetch(`http://localhost:3001/govt/getToken`, {
       method: "post",
       body: JSON.stringify(body),
@@ -84,25 +164,9 @@ const registerCollege = async (req, res) => {
     });
 
     const tokenData = await getTokenFromGov.json();
-    const {
-      UID: uidFromGov,
-      VerificationToken: tokenFromGov,
-      Md5SumHash: hashfromGov,
-    } = tokenData;
-
-    // req.token + req.uid === token / uid
-    // if (uidFromGov !== UID && tokenFromGov !== VerificationToken) {
-    //   // return failed, token not verified
-    //   return res.status(403).json({
-    //     status: "failed",
-    //     message: "Your token is not valid",
-    //   });
-    // }
-
-    // check for checksum of doc
+    const { Md5SumHash: hashfromGov } = tokenData;
 
     // save doc in local
-
     const dl = await new DownloaderHelper(req.body.DOC, __dirname);
 
     await dl.on("end", () => console.log("Download Completed"));
@@ -117,13 +181,10 @@ const registerCollege = async (req, res) => {
 
     // get pdf name from local
     const pdfName = await req.body.DOC.split("/")[4].trim();
-    // console.log(pdfName, "vinit");
 
+    // check for checksum of doc
     // match it with govtCheckSum
-
     const sum = await md5File(`${__dirname}/${pdfName}`);
-
-    console.log(sum);
 
     if (sum !== hashfromGov) {
       return res.status(403).json({
@@ -132,21 +193,57 @@ const registerCollege = async (req, res) => {
       });
     }
 
-    // once above doc verified we delete file from local
+    //-> once above doc verified we delete file from local
 
-    // save() return success
-    // const newUni = new UniversityInfo({
-    //   UID,
-    //   Uname,
-    //   DOC,
-    //   Uemail,
-    //   Pass: hashpassword,
-    //   VerificationToken,
-    //   verified: true,
-    // });
-    // await newUni.save();
+    // email verify
 
-    return res.status(200).json({ message: "College Registered" });
+    console.log("check1");
+
+    const currentUrl = "http://localhost:3001/";
+    const uniquestring = uuidv4() + Uemail;
+    const saltrounds = 10;
+    const hashUniqueString = await bcrypt.hash(uniquestring, saltrounds);
+
+    const collegeMailOptions = {
+      from: "codejackers@gmail.com",
+      subject: "OTP Verification",
+      to: Uemail,
+      html: `
+        <a href=${currentUrl + "verify/" + Uemail + "/" + uniquestring}>
+              <button> Click here to verify.</button>
+            </a>
+        `,
+    };
+
+    console.log("check2");
+
+    const newVerification = await new UserVerification({
+      userId: Uemail,
+      uniquestring: hashUniqueString,
+      createdAt: Date.now(),
+      expiresAt: Date.now() + 60 * 60 * 60,
+    });
+
+    const newUni = await new UniversityInfo({
+      UID,
+      Uname,
+      DOC,
+      Uemail,
+      Pass: hashpassword,
+      verified: false,
+    });
+
+    console.log("check3");
+
+    await newUni.save();
+    await newVerification.save();
+    await transporter.sendMail(collegeMailOptions);
+    console.log("check4");
+
+    // all check done -> return success
+    return res
+      .status(200)
+      .json({ status: "Registration Pending", message: "token sent" });
   } catch (error) {
     return res.status(400).json({ status: "Failed", error: error });
   }
@@ -329,13 +426,52 @@ const deleteCollege = async (req, res) => {
   }
 };
 
+const verificationCollege = async (req, res) => {
+  let { userId, uniqueString } = req.params;
+
+  try {
+    const result = await UserVerification.find({ userId });
+
+    if (!result)
+      res.status(400).json({ status: "Failed", message: "Data not found" });
+
+    const { expiresAt } = result[0];
+    const hashUniqueString = result[0].uniquestring;
+
+    if (expiresAt < Date.now()) {
+      await UserVerification.deleteOne({ userId });
+      await UniversityInfo.deleteOne({ _id: userId });
+      res
+        .status(200)
+        .json({ status: "Failed", message: "Verification token has expired" });
+    } else {
+      const isMatch = bcrypt.compare(uniqueString, hashUniqueString);
+
+      if (!isMatch)
+        res
+          .status(400)
+          .json({ status: "Failed", message: "token is incorrect" });
+
+      await UniversityInfo.updateOne({ _id: userId }, { verified: true });
+      await UserVerification.deleteOne({ userId });
+      res.status(200).json({
+        message:
+          "Successfully Verified, You can now login through our dashboard",
+      });
+    }
+  } catch (error) {
+    res.status(400).json({ status: "Failed", error: error });
+  }
+};
+
 module.exports = {
   getAllColleges,
   getCollege,
   registerCollege,
-  // verificationCollege,
+  verificationCollege,
   // rejectCollege,
   loginCollege,
+  registerNewCollege,
   updatePassword,
   sendOtp,
   verifyOtp,
