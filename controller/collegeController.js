@@ -183,6 +183,7 @@ const registerNewCollege = async (req, res) => {
     const pdfName = await req.body.DOC.split("/")[4].trim();
 
     // check for checksum of doc
+    // check for checksum of doc
     // match it with govtCheckSum
     const sum = await md5File(`${__dirname}/${pdfName}`);
 
@@ -471,6 +472,7 @@ module.exports = {
   verificationCollege,
   // rejectCollege,
   loginCollege,
+  registerNewCollege,
   registerNewCollege,
   updatePassword,
   sendOtp,
