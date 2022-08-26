@@ -5,6 +5,8 @@ const GovernmentInfo = require("../models/GovernmentInfo");
 const UserVerification = require("../models/UserVerification");
 
 const bcrypt = require("bcrypt");
+const md5File = require("md5-file");
+
 const checksum = require("checksum");
 const { DownloaderHelper } = require("node-downloader-helper");
 const { v4: uuidv4 } = require("uuid"); // for unique string
@@ -75,7 +77,7 @@ const registerCollege = async (req, res) => {
     // Send /gov/verify/token -> token / uid
 
     const body = { UID: UID };
-    const getTokenFromGov = await fetch(`http://localhost:3000/govt/getToken`, {
+    const getTokenFromGov = await fetch(`http://localhost:3001/govt/getToken`, {
       method: "post",
       body: JSON.stringify(body),
       headers: { "Content-Type": "application/json" },
@@ -98,45 +100,55 @@ const registerCollege = async (req, res) => {
     // }
 
     // check for checksum of doc
-    const dl = await new DownloaderHelper(req.body.DOC, __dirname);
-    await dl
-      .on("end", () => console.log("Download Completed"))
-      .then(() => {
-        checksum.file(`${__dirname}/pdf.pdf`, function (err, sum) {
-          console.log(sum, " abhi");
-          if (sum === hashfromGov) {
-            console.log("yay yay");
-          }
-        });
-      });
-    await dl.on("error", (err) => console.log("Download Failed", err));
-    dl.start().catch((err) => console.error(err));
 
-    // console.log(req.body.DOC);
-    // cs = checksum("__dirname");
-    // console.log(cs);
-    if (cs !== hashfromGov) {
+    // save doc in local
+
+    const dl = await new DownloaderHelper(req.body.DOC, __dirname);
+
+    await dl.on("end", () => console.log("Download Completed"));
+    await dl.on("error", (err) => {
+      console.log("Download Failed", err);
+      return res.status(500).json({
+        status: "failed",
+        message: "An error occured in interpreting the pdf", // pdf dwnld error
+      });
+    });
+    await dl.start();
+
+    // get pdf name from local
+    const pdfName = await req.body.DOC.split("/")[4].trim();
+    // console.log(pdfName, "vinit");
+
+    // match it with govtCheckSum
+
+    const sum = await md5File(`${__dirname}/${pdfName}`);
+
+    console.log(sum);
+
+    if (sum !== hashfromGov) {
       return res.status(403).json({
         status: "failed",
-        message: "Your Doc verification is failed, please use legit documents",
+        message: "Found misconfiguration in pdf",
       });
     }
 
+    // once above doc verified we delete file from local
+
     // save() return success
-    const newUni = new UniversityInfo({
-      UID,
-      Uname,
-      DOC,
-      Uemail,
-      Pass: hashpassword,
-      VerificationToken,
-      verified: true,
-    });
-    await newUni.save();
+    // const newUni = new UniversityInfo({
+    //   UID,
+    //   Uname,
+    //   DOC,
+    //   Uemail,
+    //   Pass: hashpassword,
+    //   VerificationToken,
+    //   verified: true,
+    // });
+    // await newUni.save();
 
     return res.status(200).json({ message: "College Registered" });
   } catch (error) {
-    res.status(400).json({ status: "Failed", error: error });
+    return res.status(400).json({ status: "Failed", error: error });
   }
 };
 
