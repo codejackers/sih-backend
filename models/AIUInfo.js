@@ -1,18 +1,19 @@
 const mongoose = require("mongoose");
 
 const aiuSchema = new mongoose.Schema({
-  UID: {
-    type: String,
-    required: true,
-  },
   Uname: {
     type: String,
-    required: true,
     default: "",
   },
-  Uemail: {
+  Address: {
     type: String,
-    required: true,
+    default: "",
+  },
+  Verified: {
+    type: Boolean,
+  },
+  Fake: {
+    type: Boolean,
   },
 });
 

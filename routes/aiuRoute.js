@@ -4,6 +4,6 @@ const { createCollege } = require("../controller/aiuController");
 
 const aiuRouter = express.Router();
 
-aiuRouter.post("/aiu/create", createCollege);
+aiuRouter.get("/aiu/create", createCollege);
 
 module.exports = aiuRouter;

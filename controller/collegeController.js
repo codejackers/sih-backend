@@ -24,7 +24,13 @@ const getAllColleges = async (req, res) => {
       const collegesname = await UniversityInfo.find({
         Uname: { $regex: collegename, $options: "i" },
       });
-      return res.status(200).json(collegesname);
+
+      const AiuCollegeName = await AIUInfo.find({
+        Uname: { $regex: collegename, $options: "i" },
+      });
+
+      if (collegename) return res.status(200).json(collegesname);
+      return res.status(200).json(AiuCollegeName);
     }
 
     if (city) {
@@ -36,7 +42,11 @@ const getAllColleges = async (req, res) => {
     }
 
     const colleges = await UniversityInfo.find({});
-    return res.status(200).json(colleges);
+    const Aiucolleges = await AIUInfo.find({});
+
+    const responseObj = [...colleges, ...Aiucolleges];
+
+    return res.status(200).json(responseObj);
   } catch (error) {
     return res.status(500).json({
       message: "Server error",
