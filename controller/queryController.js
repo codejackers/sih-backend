@@ -69,12 +69,12 @@ const createQuery = async (req, res) => {
         .status(404)
         .json({ message: "You must specify the college name" });
 
-    const college = await UniversityInfo.findOne({
-      Uname: { $regex: CollegeName, $options: "i" },
-    });
+    // const college = await UniversityInfo.findOne({
+    //   Uname: { $regex: CollegeName, $options: "i" },
+    // });
 
-    if (!college)
-      return res.status(200).json({ message: "Given college does not exists" });
+    // if (!college)
+    //   return res.status(200).json({ message: "Given college does not exists" });
 
     const newQuery = new QueryInfo({
       UserContact,
