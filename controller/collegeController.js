@@ -61,6 +61,11 @@ const getCollege = async (req, res) => {
       .populate("Courses")
       .populate("Notifications");
 
+    if (!college) {
+      const Aiucolleges = await AIUInfo.findById({ id });
+      return res.status(200).json({ Aiucolleges });
+    }
+
     return res.status(200).json({ college });
   } catch (error) {
     return res.status(500).json({
