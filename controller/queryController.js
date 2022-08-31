@@ -117,7 +117,7 @@ const captchaVerify = async (req, res) => {
     return res.json({ success: false, msg: "Please select captcha" });
 
   // Secret key
-  const secretKey = "6LfSr6ghAAAAAHydd0hPC6w6LwTatQ3HGL-9LssD";
+  const secretKey = process.env.CAPTCHA_SECRET_KEY;
 
   // Verify URL
   const query = JSON.stringify({
