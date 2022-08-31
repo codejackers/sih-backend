@@ -33,6 +33,6 @@ To run this project, you will need to add the following environment variables to
 `NODEMAILER_PASS`
 
 ## 🛠 Skills
-Node js,Security,Mongoose,Javascript
+Node JS,Express JS,Security,Mongoose,Javascript
 
 
